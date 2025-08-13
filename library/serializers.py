@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from library.models import Author, Book
+from library.models import Author, Book, Loan
 from library.validators import validate_profanity
 
 
@@ -19,4 +19,12 @@ class BookSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Book
+        fields = "__all__"
+
+
+class LoanSerializer(serializers.ModelSerializer):
+    """Сериализатор для выдачи книг"""
+
+    class Meta:
+        model = Loan
         fields = "__all__"

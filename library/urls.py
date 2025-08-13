@@ -3,7 +3,8 @@ from library.apps import LibraryConfig
 
 from library.views import (
     AuthorListAPIView, AuthorCreateAPIView, AuthorUpdateAPIView, AuthorDestroyAPIView, AuthorRetrieveAPIView,
-    BookListAPIView, BookDestroyAPIView, BookUpdateAPIView, BookRetrieveAPIView, BookCreateAPIView
+    BookListAPIView, BookDestroyAPIView, BookUpdateAPIView, BookRetrieveAPIView, BookCreateAPIView, LoanCreateApiView,
+    LoanUpdateApiView
 )
 
 app_name = LibraryConfig.name
@@ -19,5 +20,7 @@ urlpatterns = [
     path("book/create/", BookCreateAPIView.as_view(), name="book_create"),
     path("book/<int:pk>/update/", BookUpdateAPIView.as_view(), name="book_update"),
     path("book/<int:pk>/delete/", BookDestroyAPIView.as_view(), name="book_delete"),
+    path("loan/", LoanCreateApiView.as_view(), name="loan_create"),
+    path("loan/<int:pk>/update/", LoanUpdateApiView.as_view(), name="loan_update")
 
 ]

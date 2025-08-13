@@ -39,8 +39,7 @@ class Book(models.Model):
     """Класс - книга"""
     STATUS_CHOICES = [
         ('AVAILABLE', 'Доступна'),
-        ('RESERVED', 'Зарезервирована'),
-        ('LOANED', 'Выдана'),
+        ('LOANED', 'Выдана')
     ]
     title = models.CharField(max_length=200, verbose_name='Название', help_text='Напишите название книги')
     author = models.ForeignKey(Author, on_delete=models.CASCADE, verbose_name='Автор', help_text='Укажите автора')
@@ -54,6 +53,8 @@ class Book(models.Model):
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='AVAILABLE')
     owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Пользователь",
                               help_text="Укажите пользователя")
+    current_loan = models.ForeignKey('Loan', on_delete=models.SET_NULL, null=True, blank=True,
+                                     related_name='current_loans', verbose_name='Текущая выдача')
 
     class Meta:
         """Метаданные"""
@@ -64,28 +65,29 @@ class Book(models.Model):
         """Строковый вывод"""
         return f'Название:{self.title}, автор: {self.author}'
 
-# class BookLoan(models.Model):
-#     """Класс - выдача книг"""
-#     LOAN_STATUS_CHOICES = [
-#         ('ACTIVE', 'Активна'),
-#         ('RETURNED', 'Возвращена'),
-#         ('OVERDUE', 'Просрочена'),
-#     ]
-#     book = models.ForeignKey(Book, on_delete=models.CASCADE, verbose_name='Книга', help_text='Выберите книгу')
-#     borrower = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Читатель', help_text='Выберите читателя')
-#     loan_date = models.DateField(auto_now_add=True, verbose_name='Дата выдачи')
-#     due_date = models.DateField(verbose_name='Дата возврата', help_text='Укажите дату возврата книги')
-#     return_date = models.DateField(null=True, blank=True, verbose_name='Фактическая дата возврата')
-#     status = models.CharField(max_length=10, choices=LOAN_STATUS_CHOICES, default='ACTIVE',
-#                               verbose_name='Статус выдачи')
-#     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='created_loans',
-#                                    verbose_name='Кем выдана')
-#
-#     class Meta:
-#         """Метаданные"""
-#         verbose_name = 'Выдача книги'
-#         verbose_name_plural = 'Выдачи книг'
-#
-#     def __str__(self):
-#         """Строковый вывод"""
-#         return f'Читатель:{self.borrower}, книга:{self.book} - статус выдачи:{self.status}'
+
+class Loan(models.Model):
+    """Класс - выдача книг"""
+    LOAN_STATUS_CHOICES = [
+        ('ACTIVE', 'Активна'),
+        ('RETURNED', 'Возвращена'),
+        ('OVERDUE', 'Просрочена'),
+    ]
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, verbose_name='Книга', help_text='Выберите книгу')
+    borrower = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Читатель', help_text='Выберите читателя')
+    loan_date = models.DateField(auto_now_add=True, verbose_name='Дата выдачи')
+    due_date = models.DateField(verbose_name='Дата возврата', help_text='Укажите дату возврата книги')
+    return_date = models.DateField(null=True, blank=True, verbose_name='Фактическая дата возврата')
+    status = models.CharField(max_length=10, choices=LOAN_STATUS_CHOICES, default='ACTIVE',
+                              verbose_name='Статус выдачи')
+    notified_about_due = models.BooleanField(default=False, verbose_name='Уведомление о окончании срока')
+    notified_about_overdue = models.BooleanField(default=False, verbose_name='Уведомление о просрочке')
+
+    class Meta:
+        """Метаданные"""
+        verbose_name = 'Выдача книги'
+        verbose_name_plural = 'Выдачи книг'
+
+    def __str__(self):
+        """Строковый вывод"""
+        return f'Читатель:{self.borrower}, книга:{self.book} - статус выдачи:{self.status}'
