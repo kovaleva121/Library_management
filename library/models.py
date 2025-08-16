@@ -16,7 +16,8 @@ class Author(models.Model):
     bio = models.TextField(blank=True, null=True, verbose_name='Биография', help_text='Напишите биографию')
     date_of_birth = models.DateField(blank=True, null=True, verbose_name='Дата рождения',
                                      help_text='Укажите дату рождения')
-    date_of_death = models.DateField(blank=True, null=True, verbose_name='Дата смерти', help_text='Укажите дату смерти')
+    date_of_death = models.DateField(blank=True, null=True, verbose_name='Дата смерти',
+                                     help_text='Укажите дату смерти')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Дата обновления')
     popularity = models.PositiveIntegerField(blank=True, null=True, choices=POPULARITY_CHOICES, default=1,
@@ -73,10 +74,13 @@ class Loan(models.Model):
         ('RETURNED', 'Возвращена'),
         ('OVERDUE', 'Просрочена'),
     ]
-    book = models.ForeignKey(Book, on_delete=models.CASCADE, verbose_name='Книга', help_text='Выберите книгу')
-    borrower = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Читатель', help_text='Выберите читателя')
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, verbose_name='Книга',
+                             help_text='Выберите книгу')
+    borrower = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Читатель',
+                                 help_text='Выберите читателя')
     loan_date = models.DateField(auto_now_add=True, verbose_name='Дата выдачи')
-    due_date = models.DateField(verbose_name='Дата возврата', help_text='Укажите дату возврата книги')
+    due_date = models.DateField(blank=True, null=True, verbose_name='Дата возврата',
+                                help_text='Укажите дату возврата книги')
     return_date = models.DateField(null=True, blank=True, verbose_name='Фактическая дата возврата')
     status = models.CharField(max_length=10, choices=LOAN_STATUS_CHOICES, default='ACTIVE',
                               verbose_name='Статус выдачи')

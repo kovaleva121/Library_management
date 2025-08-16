@@ -1,9 +1,8 @@
 from __future__ import absolute_import, unicode_literals
 import os
-from datetime import timedelta
-
-from celery import Celery
 from celery.schedules import crontab
+from celery import Celery
+import config.settings
 
 # Установка переменной окружения для настроек проекта
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
@@ -21,6 +20,7 @@ app.autodiscover_tasks()
 app.conf.beat_schedule = {
     'send-book-reminders': {
         'task': 'library.tasks.send_due_date_reminders',
-        'schedule': timedelta(minutes=1),  # Каждый день в 9 утра
+        'schedule': crontab(hour=9),  # Каждый день в 9 утра
     },
 }
+app.conf.timezone = config.settings.TIME_ZONE

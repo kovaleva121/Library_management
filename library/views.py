@@ -38,7 +38,7 @@ class AuthorUpdateAPIView(UpdateAPIView):
 
 
 class AuthorRetrieveAPIView(RetrieveAPIView):
-    """Контроллер редактирования автора"""
+    """Контроллер получения автора"""
     queryset = Author.objects.all()
     serializer_class = AuthorSerializer
     permission_classes = [IsOwner]
@@ -48,7 +48,7 @@ class AuthorDestroyAPIView(DestroyAPIView):
     """Контроллер удаления автора"""
     queryset = Author.objects.all()
     serializer_class = AuthorSerializer
-    permission_classes = [IsOwner, IsModer]
+    permission_classes = [IsOwner | IsModer]
 
 
 class BookCreateAPIView(CreateAPIView):
@@ -78,7 +78,7 @@ class BookUpdateAPIView(UpdateAPIView):
 
 
 class BookRetrieveAPIView(RetrieveAPIView):
-    """Контроллер редактирования книги"""
+    """Контроллер получения книги"""
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     permission_classes = [IsOwner]
@@ -88,14 +88,16 @@ class BookDestroyAPIView(DestroyAPIView):
     """Контроллер удаления книги"""
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [IsOwner, IsModer]
+    permission_classes = [IsOwner | IsModer]
 
 
 class LoanCreateApiView(CreateAPIView):
+    """Контроллер создания выдачи книги"""
     queryset = Loan.objects.all()
     serializer_class = LoanSerializer
 
     def create(self, request, *args, **kwargs):
+        """Переопределение метода создания"""
         book_id = request.data.get('book')
         borrower_id = request.data.get('borrower')
 
@@ -113,7 +115,7 @@ class LoanCreateApiView(CreateAPIView):
             book=book,
             borrower=borrower,
             loan_date=timezone.now().date(),
-            due_date=timezone.now().date() + timedelta(days=1))
+            due_date=timezone.now().date() + timedelta(days=14))
 
         # Обновляем статус книги
         book.status = 'LOANED'
@@ -125,10 +127,12 @@ class LoanCreateApiView(CreateAPIView):
 
 
 class LoanUpdateApiView(UpdateAPIView):
+    """Контроллер для обновления выдачи книги"""
     queryset = Loan.objects.all()
     serializer_class = LoanSerializer
 
     def update(self, request, *args, **kwargs):
+        """Переопределение метода обновления"""
         instance = self.get_object()
 
         # Обновляем дату возврата

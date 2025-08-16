@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 
 
 def validate_profanity(value):
+    """Валидатор, который не пропускает плохие слова"""
     if not isinstance(value, str):
         return
 

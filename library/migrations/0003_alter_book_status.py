@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('library', '0002_loan_book_current_loan'),
     ]
@@ -13,6 +12,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='book',
             name='status',
-            field=models.CharField(choices=[('AVAILABLE', 'Доступна'), ('LOANED', 'Выдана')], default='AVAILABLE', max_length=10),
+            field=models.CharField(choices=[('AVAILABLE', 'Доступна'), ('LOANED', 'Выдана')], default='AVAILABLE',
+                                   max_length=10),
         ),
     ]

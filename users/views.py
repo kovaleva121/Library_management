@@ -13,6 +13,7 @@ from users.serializers import UserSerializer
 
 
 class UserCreateApiView(CreateAPIView):
+    """Контроллер создания пользователя"""
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [AllowAny]
@@ -24,27 +25,33 @@ class UserCreateApiView(CreateAPIView):
 
 
 class UserListApiView(ListAPIView):
+    """Контроллер списка пользователей"""
     queryset = User.objects.all()
     serializer_class = UserSerializer
     pagination_class = MyPagination
 
 
 class UserUpdateApiView(UpdateAPIView):
+    """Контроллер обновления пользователя"""
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
     def get_object(self):
+        """Проверка на то, что может обновлять только свой профиль"""
         return self.request.user
 
 
 class UserRetrieveApiView(RetrieveAPIView):
+    """Контроллер получения пользователя"""
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
     def get_object(self):
+        """Проверка на то, что может просматривать только свой профиль"""
         return self.request.user
 
 
 class UserDestroyApiView(DestroyAPIView):
+    """Контроллер удаления пользователя"""
     queryset = User.objects.all()
     serializer_class = UserSerializer

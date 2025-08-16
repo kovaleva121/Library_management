@@ -6,7 +6,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('library', '0001_initial'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
@@ -20,9 +19,14 @@ class Migration(migrations.Migration):
                 ('loan_date', models.DateField(auto_now_add=True, verbose_name='Дата выдачи')),
                 ('due_date', models.DateField(help_text='Укажите дату возврата книги', verbose_name='Дата возврата')),
                 ('return_date', models.DateField(blank=True, null=True, verbose_name='Фактическая дата возврата')),
-                ('status', models.CharField(choices=[('ACTIVE', 'Активна'), ('RETURNED', 'Возвращена'), ('OVERDUE', 'Просрочена')], default='ACTIVE', max_length=10, verbose_name='Статус выдачи')),
-                ('book', models.ForeignKey(help_text='Выберите книгу', on_delete=django.db.models.deletion.CASCADE, to='library.book', verbose_name='Книга')),
-                ('borrower', models.ForeignKey(help_text='Выберите читателя', on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='Читатель')),
+                ('status', models.CharField(
+                    choices=[('ACTIVE', 'Активна'), ('RETURNED', 'Возвращена'), ('OVERDUE', 'Просрочена')],
+                    default='ACTIVE', max_length=10, verbose_name='Статус выдачи')),
+                ('book', models.ForeignKey(help_text='Выберите книгу', on_delete=django.db.models.deletion.CASCADE,
+                                           to='library.book', verbose_name='Книга')),
+                ('borrower',
+                 models.ForeignKey(help_text='Выберите читателя', on_delete=django.db.models.deletion.CASCADE,
+                                   to=settings.AUTH_USER_MODEL, verbose_name='Читатель')),
             ],
             options={
                 'verbose_name': 'Выдача книги',
@@ -32,6 +36,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='book',
             name='current_loan',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='current_loans', to='library.loan', verbose_name='Текущая выдача'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL,
+                                    related_name='current_loans', to='library.loan', verbose_name='Текущая выдача'),
         ),
     ]

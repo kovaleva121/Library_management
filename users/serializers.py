@@ -7,5 +7,6 @@ class UserSerializer(serializers.ModelSerializer):
     """Сериализатор для пользователя"""
 
     class Meta:
+        """Метаданные"""
         model = User
         fields = '__all__'

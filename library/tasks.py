@@ -4,9 +4,6 @@ from django.core.mail import send_mail
 from django.conf import settings
 from celery import shared_task
 from library.models import Loan
-import logging
-
-logger = logging.getLogger(__name__)
 
 
 @shared_task
@@ -26,7 +23,8 @@ def send_due_date_reminders():
             loan=loan,
             subject=f"Напоминание: срок сдачи книги '{loan.book.title}'",
             message=f"""Уважаемый(ая) {loan.borrower.email},
-                Напоминаем вам, что срок сдачи книги "{loan.book.title}" истекает через 2 дня ({loan.due_date.strftime('%d.%m.%Y')}).
+                Напоминаем вам, что срок сдачи книги "{loan.book.title}"
+                истекает через 2 дня ({loan.due_date.strftime('%d.%m.%Y')}).
                 Пожалуйста, не забудьте вернуть книгу в указанный срок.
                 С уважением,
                 Библиотечная система"""
@@ -65,5 +63,5 @@ def send_reminder_email(loan, subject, message):
         message=message,
         from_email=settings.DEFAULT_FROM_EMAIL,
         recipient_list=[loan.borrower.email],
-        fail_silently=False,
+        fail_silently=True,
     )
