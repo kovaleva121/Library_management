@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.getenv('SECRET_KEY')
+SECRET_KEY = 'django-insecure-3$^v!u!*(q02(n!(60wk=begd(l(m56_fjpt*hnyodr*r+zfcn'
 
 DEBUG = os.getenv('DEBUG', 'false').lower() == 'true'
 
