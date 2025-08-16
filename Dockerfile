@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM python:3.10-slim
 
 # Установка системных зависимостей
 RUN apt-get update && \
@@ -12,7 +12,9 @@ WORKDIR /code
 COPY requirements.txt .
 
 # Установка зависимостей
-RUN pip install --upgrade pip && \
+RUN pip uninstall ipython -y && \
+    pip install --no-cache-dir ipython==8.12.3
+    pip install --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
 # Копируем остальные файлы
