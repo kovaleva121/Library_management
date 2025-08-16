@@ -13,7 +13,7 @@ COPY requirements.txt .
 
 # Установка зависимостей
 RUN pip install --upgrade pip && \
-    pip install --no-cache-dir $(grep -v 'ipython==' requirements.txt)
+    pip install --no-cache-dir -r requirements.txt --ignore-installed ipython
 
 # Копируем остальные файлы
 COPY . .
