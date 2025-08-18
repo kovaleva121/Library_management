@@ -26,6 +26,8 @@ jobs:
   test:
     needs: lint
     runs-on: ubuntu-latest
+    env:
+      SECRET_KEY: "django-insecure-test-key-for-ci-1234567890"
 
     steps:
       - name: Check out code

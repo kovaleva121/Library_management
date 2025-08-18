@@ -1,6 +1,7 @@
 from django.db import models
-
+from django.db.models.constraints import Q, F, CheckConstraint
 from users.models import User
+from django.utils import timezone
 
 
 class Author(models.Model):
@@ -30,10 +31,33 @@ class Author(models.Model):
         """Метаданные"""
         verbose_name = 'Автор'
         verbose_name_plural = 'Авторы'
+        constraints = [
+            CheckConstraint(
+                condition=Q(date_of_birth__lte=F('date_of_death')),
+                name='correct_age_dates'
+            )
+        ]
 
     def __str__(self):
         """Строковый вывод"""
         return f'{self.first_name} {self.last_name} {self.patronymic}'
+
+
+class Genre(models.Model):
+    """Класс - жанр"""
+    name = models.CharField(max_length=100, unique=True, verbose_name='Название жанра',
+                            help_text='Напишите название жанра')
+    description = models.TextField(blank=True, null=True, verbose_name='Описание жанра',
+                                   help_text='Напишите описание жанра')
+
+    class Meta:
+        """Метаданные"""
+        verbose_name = 'Жанр'
+        verbose_name_plural = 'Жанры'
+
+    def __str__(self):
+        """Строковый вывод"""
+        return self.name
 
 
 class Book(models.Model):
@@ -45,7 +69,7 @@ class Book(models.Model):
     title = models.CharField(max_length=200, verbose_name='Название', help_text='Напишите название книги')
     author = models.ForeignKey(Author, on_delete=models.CASCADE, verbose_name='Автор', help_text='Укажите автора')
     description = models.TextField(blank=True, null=True, verbose_name='Описание', help_text='Напишите описание')
-    genres = models.CharField(max_length=100, blank=True, null=True, verbose_name='Жанр', help_text='Напишите жанр')
+    genres = models.ManyToManyField(Genre, verbose_name='Жанр', help_text='Выберите жанр')
     published_date = models.DateField(verbose_name='Дата публикации', help_text='Укажите дату публикации')
     pages = models.PositiveIntegerField(blank=True, null=True, verbose_name='Количество страниц',
                                         help_text='Укажите кол-во страниц')
@@ -61,6 +85,11 @@ class Book(models.Model):
         """Метаданные"""
         verbose_name = 'Книга'
         verbose_name_plural = 'Книги'
+        constraints = [
+            CheckConstraint(
+                condition=Q(published_date__lte=timezone.now()),
+                name='published_date_not_in_future')
+        ]
 
     def __str__(self):
         """Строковый вывод"""
@@ -91,7 +120,15 @@ class Loan(models.Model):
         """Метаданные"""
         verbose_name = 'Выдача книги'
         verbose_name_plural = 'Выдачи книг'
+        constraints = [CheckConstraint(
+            condition=(
+                    Q(return_date__isnull=True) |
+                    Q(return_date__gte=models.F('loan_date'))
+            ),
+            name='return_date_after_loan_date'
+        ),
+        ]
 
-    def __str__(self):
-        """Строковый вывод"""
-        return f'Читатель:{self.borrower}, книга:{self.book} - статус выдачи:{self.status}'
+        def __str__(self):
+            """Строковый вывод"""
+            return f'Читатель:{self.borrower}, книга:{self.book} - статус выдачи:{self.status}'

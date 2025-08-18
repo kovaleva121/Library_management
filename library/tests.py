@@ -2,7 +2,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from library.models import Book, Author, Loan
+from library.models import Book, Author, Loan, Genre
 from users.models import User
 
 
@@ -16,13 +16,15 @@ class LibraryCRUDTestCase(APITestCase):
         self.moderator = User.objects.create(email="moder@test.com", password="moderpass", is_staff=True)
         self.moderator.groups.add(moder_group)  # Добавляем в группу модераторов
 
-        # создаем пользователя, книгу, автора и выдачу книги
+        # создаем пользователя, жанр, книгу, автора и выдачу книги
         self.user = User.objects.create(email='test@example.com', password='123qwe')
         self.other_user = User.objects.create(email='test2@example.com', password='123qwer')
         self.author = Author.objects.create(first_name='test', last_name='test', patronymic='test', owner=self.user)
+        self.genre = Genre.objects.create(name='new genre')
         self.book = Book.objects.create(title='test2', author=self.author,
                                         published_date='2025-08-14', owner=self.user,
                                         status='AVAILABLE')
+        self.book.genres.add(self.genre)
         self.loan = Loan.objects.create(book=self.book, borrower=self.user)
 
         # URL для тестирования автора
@@ -42,6 +44,13 @@ class LibraryCRUDTestCase(APITestCase):
         # URL для тестирования выдачи книги
         self.loan_create_url = reverse("library:loan_create")
         self.loan_update_url = reverse("library:loan_update", kwargs={"pk": self.loan.pk})
+
+        # URL для тестирования жанра
+        self.genre_create_url = reverse("library:genre_create")
+        self.genre_update_url = reverse("library:genre_update", kwargs={"pk": self.genre.pk})
+        self.genre_retrieve_url = reverse("library:genre_retrieve", kwargs={"pk": self.genre.pk})
+        self.genre_list_url = reverse("library:genre_list")
+        self.genre_destroy_url = reverse("library:genre_delete", kwargs={"pk": self.genre.pk})
 
     def test_create_author_user(self):
         """Тест создания автора"""
@@ -108,7 +117,7 @@ class LibraryCRUDTestCase(APITestCase):
         self.client.force_authenticate(user=self.user)
         data = {"title": "Clean Book Title", "author": self.author.pk, "published_date": "2025-08-14",
                 "owner": self.user.pk,
-                "status": "AVAILABLE", "description": "Test description", "genres": "Fiction"}
+                "status": "AVAILABLE", "description": "Test description", "genres": [self.genre.pk]}
         response = self.client.post(self.book_create_url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data["author"], self.author.pk)
@@ -180,3 +189,42 @@ class LibraryCRUDTestCase(APITestCase):
         self.client.force_authenticate(user=self.user)
         response = self.client.patch(self.loan_update_url, {})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_genre_create(self):
+        """Тест создания жанра пользователем"""
+        self.client.force_authenticate(user=self.user)
+        data = {"name": "test genre"}
+        response = self.client.post(self.genre_create_url, data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_genre_update(self):
+        """Тест обновления жанра"""
+        self.client.force_authenticate(user=self.user)
+        data = {"name": "Update genre"}
+        response = self.client.patch(self.genre_update_url, data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_genre_retrieve(self):
+        """Тест получения информации о жанре"""
+        self.client.force_authenticate(user=self.user)
+        response = self.client.get(self.genre_retrieve_url, format="json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["name"], self.genre.name)
+
+    def test_genre_list(self):
+        """Тест списка жанров"""
+        self.client.force_authenticate(user=self.user)
+        response = self.client.get(self.genre_list_url, fornat="json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_genre_list_unauthenticated(self):
+        """Тест списка жанров неавторизованным пользователем"""
+        response = self.client.get(self.genre_list_url, fornat="json")
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_genre_destroy(self):
+        """Тест удаления жанра"""
+        self.client.force_authenticate(user=self.user)
+        response = self.client.delete(self.genre_destroy_url, format="json")
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(Genre.objects.count(), 0)

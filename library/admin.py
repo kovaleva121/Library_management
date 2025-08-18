@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from library.models import Author, Book, Loan
+from library.models import Author, Book, Loan, Genre
 
 
 @admin.register(Author)
@@ -19,3 +19,9 @@ class BookAdmin(admin.ModelAdmin):
 class LoanAdmin(admin.ModelAdmin):
     """Класс для отображения модели в админке"""
     list_display = ('id', 'book', 'borrower')
+
+
+@admin.register(Genre)
+class GenreAdmin(admin.ModelAdmin):
+    """Класс для отображения модели в админке"""
+    list_display = ('id', 'name')

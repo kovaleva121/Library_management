@@ -55,3 +55,7 @@ class UserDestroyApiView(DestroyAPIView):
     """Контроллер удаления пользователя"""
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+    def get_object(self):
+        """Проверка на то, что может удалять только свой профиль"""
+        return self.request.user

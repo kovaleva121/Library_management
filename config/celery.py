@@ -17,9 +17,15 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 app.autodiscover_tasks()
 
 # Настройка периодических задач
+# config/celery.py
+
 app.conf.beat_schedule = {
-    'send-book-reminders': {
-        'task': 'library.tasks.send_due_date_reminders',
+    'send-upcoming-reminders': {
+        'task': 'library.tasks.send_upcoming_due_reminders',
+        'schedule': crontab(hour=9),  # Каждый день в 9 утра
+    },
+    'send-overdue-notifications': {
+        'task': 'library.tasks.send_overdue_notifications',
         'schedule': crontab(hour=9),  # Каждый день в 9 утра
     },
 }

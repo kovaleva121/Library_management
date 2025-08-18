@@ -6,11 +6,11 @@ from rest_framework import status
 from rest_framework.generics import (CreateAPIView, ListAPIView, UpdateAPIView, RetrieveAPIView, DestroyAPIView)
 from rest_framework.response import Response
 
-from library.models import Author, Book, Loan
+from library.models import Author, Book, Loan, Genre
 from users.models import User
 from library.pagination import MyPagination
 from library.permissions import IsOwner, IsModer
-from library.serializers import AuthorSerializer, BookSerializer, LoanSerializer
+from library.serializers import AuthorSerializer, BookSerializer, LoanSerializer, GenreSerializer
 
 
 class AuthorCreateAPIView(CreateAPIView):
@@ -147,3 +147,34 @@ class LoanUpdateApiView(UpdateAPIView):
 
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
+
+
+class GenreCreateApiView(CreateAPIView):
+    """Контроллер создания жанра"""
+    queryset = Genre.objects.all()
+    serializer_class = GenreSerializer
+
+
+class GenreUpdateApiView(UpdateAPIView):
+    """Контроллер обновления жанра"""
+    queryset = Genre.objects.all()
+    serializer_class = GenreSerializer
+
+
+class GenreListApiView(ListAPIView):
+    """Контроллер списка жанров"""
+    queryset = Genre.objects.all()
+    serializer_class = GenreSerializer
+    pagination_class = MyPagination
+
+
+class GenreRetrieveApiView(RetrieveAPIView):
+    """Контроллер получения жанра"""
+    queryset = Genre.objects.all()
+    serializer_class = GenreSerializer
+
+
+class GenreDestroyApiView(DestroyAPIView):
+    """Контроллер удаления жанра"""
+    queryset = Genre.objects.all()
+    serializer_class = GenreSerializer
