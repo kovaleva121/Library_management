@@ -121,13 +121,8 @@ class Loan(models.Model):
         verbose_name = 'Выдача книги'
         verbose_name_plural = 'Выдачи книг'
         constraints = [CheckConstraint(
-            condition=(
-                    Q(return_date__isnull=True) |
-                    Q(return_date__gte=models.F('loan_date'))
-            ),
-            name='return_date_after_loan_date'
-        ),
-        ]
+            condition=(Q(return_date__isnull=True) | Q(return_date__gte=models.F('loan_date'))),
+            name='return_date_after_loan_date'), ]
 
         def __str__(self):
             """Строковый вывод"""

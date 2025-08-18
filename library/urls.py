@@ -4,7 +4,8 @@ from library.apps import LibraryConfig
 from library.views import (
     AuthorListAPIView, AuthorCreateAPIView, AuthorUpdateAPIView, AuthorDestroyAPIView, AuthorRetrieveAPIView,
     BookListAPIView, BookDestroyAPIView, BookUpdateAPIView, BookRetrieveAPIView, BookCreateAPIView, LoanCreateApiView,
-    LoanUpdateApiView, GenreUpdateApiView, GenreCreateApiView, GenreDestroyApiView, GenreListApiView, GenreRetrieveApiView
+    LoanUpdateApiView, GenreUpdateApiView, GenreCreateApiView, GenreDestroyApiView, GenreListApiView,
+    GenreRetrieveApiView
 )
 
 app_name = LibraryConfig.name

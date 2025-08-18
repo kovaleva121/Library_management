@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -17,13 +16,27 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('first_name', models.CharField(help_text='Напишите имя', max_length=100, verbose_name='Имя')),
                 ('last_name', models.CharField(help_text='Напишите фамилию', max_length=200, verbose_name='Фамилия')),
-                ('patronymic', models.CharField(help_text='Напишите отчество', max_length=250, verbose_name='Отчество')),
-                ('bio', models.TextField(blank=True, help_text='Напишите биографию', null=True, verbose_name='Биография')),
-                ('date_of_birth', models.DateField(blank=True, help_text='Укажите дату рождения', null=True, verbose_name='Дата рождения')),
-                ('date_of_death', models.DateField(blank=True, help_text='Укажите дату смерти', null=True, verbose_name='Дата смерти')),
-                ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')),
-                ('updated_at', models.DateTimeField(auto_now=True, verbose_name='Дата обновления')),
-                ('popularity', models.PositiveIntegerField(blank=True, choices=[(1, 'Неизвестная'), (2, 'Малоизвестная'), (3, 'Популярная')], default=1, help_text='Укажите популярность', null=True, verbose_name='Популярность')),
+                (
+                    'patronymic', models.CharField(help_text='Напишите отчество', max_length=250,
+                                                   verbose_name='Отчество')),
+                ('bio',
+                 models.TextField(blank=True, help_text='Напишите биографию', null=True,
+                                  verbose_name='Биография')),
+                ('date_of_birth', models.DateField(blank=True, help_text='Укажите дату рождения',
+                                                   null=True,
+                                                   verbose_name='Дата рождения')),
+                ('date_of_death',
+                 models.DateField(blank=True, help_text='Укажите дату смерти', null=True,
+                                  verbose_name='Дата смерти')),
+                ('created_at', models.DateTimeField(auto_now_add=True,
+                                                    verbose_name='Дата создания')),
+                ('updated_at', models.DateTimeField(auto_now=True,
+                                                    verbose_name='Дата обновления')),
+                ('popularity', models.PositiveIntegerField(blank=True, choices=[(1, 'Неизвестная'),
+                                                                                (2, 'Малоизвестная'),
+                                                                                (3, 'Популярная')], default=1,
+                                                           help_text='Укажите популярность', null=True,
+                                                           verbose_name='Популярность')),
             ],
             options={
                 'verbose_name': 'Автор',
@@ -33,14 +46,25 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Book',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(help_text='Напишите название книги', max_length=200, verbose_name='Название')),
-                ('description', models.TextField(blank=True, help_text='Напишите описание', null=True, verbose_name='Описание')),
-                ('published_date', models.DateField(help_text='Укажите дату публикации', verbose_name='Дата публикации')),
-                ('pages', models.PositiveIntegerField(blank=True, help_text='Укажите кол-во страниц', null=True, verbose_name='Количество страниц')),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True,
+                                           serialize=False, verbose_name='ID')),
+                ('title',
+                 models.CharField(help_text='Напишите название книги',
+                                  max_length=200, verbose_name='Название')),
+                ('description',
+                 models.TextField(blank=True, help_text='Напишите описание',
+                                  null=True, verbose_name='Описание')),
+                ('published_date',
+                 models.DateField(help_text='Укажите дату публикации',
+                                  verbose_name='Дата публикации')),
+                ('pages', models.PositiveIntegerField(blank=True, help_text='Укажите кол-во страниц',
+                                                      null=True,
+                                                      verbose_name='Количество страниц')),
                 ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')),
                 ('updated_at', models.DateTimeField(auto_now=True, verbose_name='Дата обновления')),
-                ('status', models.CharField(choices=[('AVAILABLE', 'Доступна'), ('LOANED', 'Выдана')], default='AVAILABLE', max_length=10)),
+                ('status',
+                 models.CharField(choices=[('AVAILABLE', 'Доступна'), ('LOANED', 'Выдана')], default='AVAILABLE',
+                                  max_length=10)),
             ],
             options={
                 'verbose_name': 'Книга',
@@ -51,8 +75,10 @@ class Migration(migrations.Migration):
             name='Genre',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(help_text='Напишите название жанра', max_length=100, unique=True, verbose_name='Название жанра')),
-                ('description', models.TextField(blank=True, help_text='Напишите описание жанра', null=True, verbose_name='Описание жанра')),
+                ('name', models.CharField(help_text='Напишите название жанра', max_length=100, unique=True,
+                                          verbose_name='Название жанра')),
+                ('description', models.TextField(blank=True, help_text='Напишите описание жанра', null=True,
+                                                 verbose_name='Описание жанра')),
             ],
             options={
                 'verbose_name': 'Жанр',
@@ -64,11 +90,17 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('loan_date', models.DateField(auto_now_add=True, verbose_name='Дата выдачи')),
-                ('due_date', models.DateField(blank=True, help_text='Укажите дату возврата книги', null=True, verbose_name='Дата возврата')),
+                ('due_date', models.DateField(blank=True, help_text='Укажите дату возврата книги', null=True,
+                                              verbose_name='Дата возврата')),
                 ('return_date', models.DateField(blank=True, null=True, verbose_name='Фактическая дата возврата')),
-                ('status', models.CharField(choices=[('ACTIVE', 'Активна'), ('RETURNED', 'Возвращена'), ('OVERDUE', 'Просрочена')], default='ACTIVE', max_length=10, verbose_name='Статус выдачи')),
-                ('notified_about_due', models.BooleanField(default=False, verbose_name='Уведомление о окончании срока')),
-                ('notified_about_overdue', models.BooleanField(default=False, verbose_name='Уведомление о просрочке')),
+                ('status', models.CharField(
+                    choices=[('ACTIVE', 'Активна'), ('RETURNED', 'Возвращена'), ('OVERDUE', 'Просрочена')],
+                    default='ACTIVE', max_length=10, verbose_name='Статус выдачи')),
+                (
+                    'notified_about_due',
+                    models.BooleanField(default=False, verbose_name='Уведомление о окончании срока')),
+                ('notified_about_overdue', models.BooleanField(default=False,
+                                                               verbose_name='Уведомление о просрочке')),
             ],
             options={
                 'verbose_name': 'Выдача книги',

@@ -7,7 +7,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -19,17 +18,20 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='author',
             name='owner',
-            field=models.ForeignKey(help_text='Укажите пользователя', on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='Пользователь'),
+            field=models.ForeignKey(help_text='Укажите пользователя', on_delete=django.db.models.deletion.CASCADE,
+                                    to=settings.AUTH_USER_MODEL, verbose_name='Пользователь'),
         ),
         migrations.AddField(
             model_name='book',
             name='author',
-            field=models.ForeignKey(help_text='Укажите автора', on_delete=django.db.models.deletion.CASCADE, to='library.author', verbose_name='Автор'),
+            field=models.ForeignKey(help_text='Укажите автора', on_delete=django.db.models.deletion.CASCADE,
+                                    to='library.author', verbose_name='Автор'),
         ),
         migrations.AddField(
             model_name='book',
             name='owner',
-            field=models.ForeignKey(help_text='Укажите пользователя', on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='Пользователь'),
+            field=models.ForeignKey(help_text='Укажите пользователя', on_delete=django.db.models.deletion.CASCADE,
+                                    to=settings.AUTH_USER_MODEL, verbose_name='Пользователь'),
         ),
         migrations.AddField(
             model_name='book',
@@ -39,28 +41,37 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='loan',
             name='book',
-            field=models.ForeignKey(help_text='Выберите книгу', on_delete=django.db.models.deletion.CASCADE, to='library.book', verbose_name='Книга'),
+            field=models.ForeignKey(help_text='Выберите книгу', on_delete=django.db.models.deletion.CASCADE,
+                                    to='library.book', verbose_name='Книга'),
         ),
         migrations.AddField(
             model_name='loan',
             name='borrower',
-            field=models.ForeignKey(help_text='Выберите читателя', on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='Читатель'),
+            field=models.ForeignKey(help_text='Выберите читателя', on_delete=django.db.models.deletion.CASCADE,
+                                    to=settings.AUTH_USER_MODEL, verbose_name='Читатель'),
         ),
         migrations.AddField(
             model_name='book',
             name='current_loan',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='current_loans', to='library.loan', verbose_name='Текущая выдача'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL,
+                                    related_name='current_loans', to='library.loan', verbose_name='Текущая выдача'),
         ),
         migrations.AddConstraint(
             model_name='author',
-            constraint=models.CheckConstraint(condition=models.Q(('date_of_birth__lte', models.F('date_of_death'))), name='correct_age_dates'),
+            constraint=models.CheckConstraint(condition=models.Q(('date_of_birth__lte', models.F('date_of_death'))),
+                                              name='correct_age_dates'),
         ),
         migrations.AddConstraint(
             model_name='loan',
-            constraint=models.CheckConstraint(condition=models.Q(('return_date__isnull', True), ('return_date__gte', models.F('loan_date')), _connector='OR'), name='return_date_after_loan_date'),
+            constraint=models.CheckConstraint(
+                condition=models.Q(('return_date__isnull', True), ('return_date__gte', models.F('loan_date')),
+                                   _connector='OR'), name='return_date_after_loan_date'),
         ),
         migrations.AddConstraint(
             model_name='book',
-            constraint=models.CheckConstraint(condition=models.Q(('published_date__lte', datetime.datetime(2025, 8, 18, 15, 4, 38, 10423, tzinfo=datetime.timezone.utc))), name='published_date_not_in_future'),
+            constraint=models.CheckConstraint(condition=models.Q(('published_date__lte',
+                                                                  datetime.datetime(2025, 8, 18, 15, 4, 38, 10423,
+                                                                                    tzinfo=datetime.timezone.utc))),
+                                              name='published_date_not_in_future'),
         ),
     ]
