@@ -35,6 +35,7 @@ class BookSerializer(serializers.ModelSerializer):
 
 class LoanSerializer(serializers.ModelSerializer):
     """Сериализатор для выдачи книг"""
+    name = serializers.CharField(validators=[validate_profanity])
 
     class Meta:
         """Метаданные"""
